@@ -1,57 +1,68 @@
 __author__ = 'isaac'
-import numpy as np
+#import numpy as np
 import pygame
 import os
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from random import shuffle
-import caffe
 import os
 import sys
 
 
 class NeuralNetwork:
 
-    def __init__(self, netModel, netPrototype, netMean , classesList, environmentsList):
+    '''
+    def __init__(self, netModel, netPrototype, netMean , classesList):
+        self.alias = "[NNET]>> "
         self.netClasses = classesList
-        self.environments = environmentsList
+        #self.environments = environmentsList
         self.home = os.getenv("HOME")
         self.caffe_root = self.home + '/caffe/'
         sys.path.insert(0, self.caffe_root + 'python')
+        import caffe
         errorFlag = False
-        print("Buscando un modelo pre entrenado CaffeNet-model...")
+        print self.alias , "Buscando un modelo pre entrenado CaffeNet-model..."
         if not os.path.isfile(netModel) or not os.path.isfile(netPrototype):
-            print "No es posible cargar la red neuronal. No se encuentra el modelo de la red"
+            print self.alias , "No es posible cargar la red neuronal. No se encuentra el modelo de la red"
             errorFlag = True
         else:
             self.netModel = netModel
-            print 'Modelo de la red neuronal cargado'
+            print self.alias , 'Modelo de la red neuronal cargado'
         if not os.path.isfile(netPrototype):
-            print "No es posible cargar la red neuronal. No se encuentra el prototipo de la red"
+            print self.alias , "No es posible cargar la red neuronal. No se encuentra el prototipo de la red"
             errorFlag = True
         else:
             self.netPrototype = netPrototype
-            print 'Prototipo de la red neuronal cargado'
+            print self.alias , 'Prototipo de la red neuronal cargado'
         if not os.path.isfile(netMean):
-            print "No es posible cargar el archivo que contiene la media de las imagenes"
+            print self.alias , "No es posible cargar el archivo que contiene la media de las imagenes"
             errorFlag = True
         else:
-            print "Media cargada."
+            print self.alias , "Media cargada."
         if not errorFlag:
             self.configureNetwork()
+    '''
 
+    def __init__(self, netModel, netPrototype, netMean, classesList):
+        self.alias = "[NNET]>> "
+        print self.alias, netModel
+        print self.alias, netPrototype
+        print self.alias, netMean
+        print self.alias, classesList
+
+'''
     def configureNetwork(self):
         caffe.set_mode_cpu()
         self.neuralNetwork = caffe.Net(self.netPrototype, self.netModel, caffe.TEST)
-        print 'Red cargada exitosamente.'
+        print self.alias , 'Red cargada exitosamente.'
         blobm = caffe.proto.caffe_pb2.BlobProto()
         datam = open( self.netMean, 'rb' ).read()
         blobm.ParseFromString(datam)
         mx = np.array(blobm.data)
-        print mx.shape
+        print self.alias ,  mx.shape
         my = np.reshape(mx,(3,256,256))
-        print 'shape mean',my.shape
+        print self.alias , 'shape mean', my.shape
         mean = my.mean(1).mean(1)
-        print "Media: ", mean
+        print self.alias , "Media: ", mean
         self.transformer = caffe.io.Transformer({'data': self.neuralNetwork.blobs['data'].data.shape})
         self.transformer.set_transpose('data', (2,0,1))
         self.transformer.set_raw_scale('data', 255)         # El modelo de referencia opera en imagenes en rango [0,255] en lugar de [0,1]
@@ -69,10 +80,14 @@ class NeuralNetwork:
         return self.environments
 
 
-    def classifyImage(self, rutaImagen):
-        self.neuralNetwork.blobs['data'].data[...] = self.transformer.preprocess('data', caffe.io.load_image(rutaImagen))
+    def classifyImage(self, imagePath):
+        self.neuralNetwork.blobs['data'].data[...] = self.transformer.preprocess('data', caffe.io.load_image(imagePath))
         out = self.neuralNetwork.forward()
         #plt.imshow(transformer.deprocess('data', net.blobs['data'].data[0]))
         # #plt.show()
-        print("Clase detectada: " , self.netClasses[out['prob'].argmax()])
+        print self.alias , "Clase detectada: " , self.netClasses[out['prob'].argmax()]
+
+'''
+
+
 
