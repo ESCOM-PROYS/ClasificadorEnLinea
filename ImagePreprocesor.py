@@ -1,4 +1,5 @@
-#from PIL.Image import open
+from PIL.Image import open
+from PIL.Image import Image as PIL_IMG
 from Image import Image
 
 
@@ -17,8 +18,6 @@ class ImagePreprocesor:
 		self.wSeg = wideSegment
 		self.strideH = horizontalStride
 		self.strideV = verticalStride
-		self.horizontalTop = self.wImg
-		self.verticalTop = self.hImg
 		self.withResizeImgOut = withResizeImgOut
 		self.highResizeImgOut = highResizeImgOut
 		if self.withResizeImgOut is None:
@@ -63,7 +62,7 @@ class ImagePreprocesor:
 
 	def resize(self, img):
 		#Resize the PIL image "self.img"
-		return img.resize(self.withResizeImgOut, self.highResizeImgOut)
+		return img.resize((self.withResizeImgOut, self.highResizeImgOut))
 
 	def copySegment(self):
 		'''
@@ -72,19 +71,21 @@ class ImagePreprocesor:
 		# Lower Right corner calculation
 		xLR = self.xUL + self.wSeg
 		yLR = self.yUL + self.hSeg
-		return self.img.crop(self.xUL, self.yUL, xLR, yLR)
+		return self.img.crop((self.xUL, self.yUL, xLR, yLR))
 
 
 	def runSegmentation(self, imgPath):
 		PILImage = open(imgPath)
 		self.img = PILImage
 		self.wImg , self.hImg = PILImage.size
+		self.horizontalTop = self.wImg
+		self.verticalTop = self.hImg
 		i = 0
 		while True:
 			segment = self.getNexSegment()
 			#Romper ciclo hasta que se reinicie la coordenada de recorte
 			if(segment.xPositionClipper == 0 and segment.yPositionClipper == 0 and i != 0):
 				break
-			segment.PILImage.save('image/cutout'+str(i)+'.jpg')
+			segment.PILImage.save('img/segments/cutout'+str(i)+'.jpg')
 			i+=1
 		return i+1

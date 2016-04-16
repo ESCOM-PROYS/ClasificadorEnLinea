@@ -2,7 +2,7 @@ __author__ = 'isaac'
 #import numpy as np
 import pygame
 import os
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from random import shuffle
 import os
 import sys
@@ -10,7 +10,6 @@ import sys
 
 class NeuralNetwork:
 
-    '''
     def __init__(self, netModel, netPrototype, netMean , classesList):
         self.alias = "[NNET]>> "
         self.netClasses = classesList
@@ -40,16 +39,13 @@ class NeuralNetwork:
             print self.alias , "Media cargada."
         if not errorFlag:
             self.configureNetwork()
-    '''
 
-    def __init__(self, netModel, netPrototype, netMean, classesList):
-        self.alias = "[NNET]>> "
         print self.alias, netModel
         print self.alias, netPrototype
         print self.alias, netMean
         print self.alias, classesList
 
-'''
+
     def configureNetwork(self):
         caffe.set_mode_cpu()
         self.neuralNetwork = caffe.Net(self.netPrototype, self.netModel, caffe.TEST)
@@ -68,7 +64,7 @@ class NeuralNetwork:
         self.transformer.set_raw_scale('data', 255)         # El modelo de referencia opera en imagenes en rango [0,255] en lugar de [0,1]
         self.transformer.set_channel_swap('data', (2,1,0))  # El modelo de referencia tiene canales BGR en lugar de RGB
         # set net to batch size of 50
-        self.neuralNetwork.blobs['data'].reshape(1,3,256,256)
+        self.neuralNetwork.blobs['data'].reshape(1, 3, 256, 256)
 
     def getNet(self):
         return self
@@ -86,8 +82,5 @@ class NeuralNetwork:
         #plt.imshow(transformer.deprocess('data', net.blobs['data'].data[0]))
         # #plt.show()
         print self.alias , "Clase detectada: " , self.netClasses[out['prob'].argmax()]
-
-'''
-
 
 

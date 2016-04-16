@@ -2,13 +2,13 @@
 __author__ = 'isaac'
 
 import pygame
-#import numpy as np
+import numpy as np
 import os
 import sys
 from NeuralNetworksHandler import NeuralNetworksHandler
 from NeuralNetwork import  NeuralNetwork
 from ImagePreprocesor import ImagePreprocesor
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from random import shuffle
 
 
@@ -19,7 +19,7 @@ class Classifier:
         print self.alias , "Iniciando Clasificador..."
         self.netHandler = NeuralNetworksHandler()
         self.imageProcesor = ImagePreprocesor(wideSegment=150, highSegment=150, horizontalStride=50, verticalStride=50, withResizeImgOut=250)
-        networkModel, netMean, prototype, classes = self.netHandler.getNextNet()
+        networkModel, netMean, prototype, classes = self.netHandler.getNetworkByIndex(0)
         self.neuralNetwork = NeuralNetwork(networkModel,  prototype, netMean, classes)
         self.eventListener()
 
@@ -46,7 +46,8 @@ class Classifier:
                         holdTime = 0
                     else:
                         print self.alias, ": ", holdTime, " miliSegundos"
-                        self.neuralNetwork = self.netHandler.getNextNet()
+                        networkModel, netMean, prototype, classes = self.netHandler.getNextNet()
+                        self.neuralNetwork = NeuralNetwork(networkModel, netMean, prototype, classes)
                         holdTime = 0
                 if event.type == pygame.QUIT:
                     sys.exit(0)
@@ -58,3 +59,4 @@ class Classifier:
     def startClasification(self):
         print self.alias, "Clasificando objetos en imágen"
         numImages = self.imageProcesor.runSegmentation("img/photo.jpg")
+
