@@ -73,7 +73,6 @@ class ImagePreprocesor:
 		yLR = self.yUL + self.hSeg
 		return self.img.crop((self.xUL, self.yUL, xLR, yLR))
 
-
 	def runSegmentation(self, imgPath):
 		PILImage = open(imgPath)
 		self.img = PILImage

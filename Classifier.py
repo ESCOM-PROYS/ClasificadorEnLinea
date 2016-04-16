@@ -18,7 +18,7 @@ class Classifier:
         self.alias = "[CLASSIFIER]>> "
         print self.alias , "Iniciando Clasificador..."
         self.netHandler = NeuralNetworksHandler()
-        self.imageProcesor = ImagePreprocesor(wideSegment=150, highSegment=150, horizontalStride=50, verticalStride=50, withResizeImgOut=250)
+        self.imageProcesor = ImagePreprocesor(wideSegment=150, highSegment=150, horizontalStride=50, verticalStride=50, withResizeImgOut=250, highResizeImgOut=250)
         networkModel, netMean, prototype, classes = self.netHandler.getNetworkByIndex(0)
         self.neuralNetwork = NeuralNetwork(networkModel,  prototype, netMean, classes)
         self.eventListener()
@@ -59,4 +59,6 @@ class Classifier:
     def startClasification(self):
         print self.alias, "Clasificando objetos en imágen"
         numImages = self.imageProcesor.runSegmentation("img/photo.jpg")
+        for imageIndex in range(numImages-1):
+            self.neuralNetwork.classifyImage('img/segments/cutout'+str(imageIndex)+'.jpg' , imageIndex)
 

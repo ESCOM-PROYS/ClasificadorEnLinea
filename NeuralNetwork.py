@@ -60,14 +60,14 @@ class NeuralNetwork:
         blobm.ParseFromString(datam)
         mx = np.array(blobm.data)
         print self.alias ,  mx.shape
-        my = np.reshape(mx,(3,256,256))
-        print self.alias , 'shape mean', my.shape
+        my = np.reshape(mx, (3, 256, 256))
+        print self.alias, 'shape mean', my.shape
         mean = my.mean(1).mean(1)
         print self.alias , "Media: ", mean
         self.transformer = caffe.io.Transformer({'data': self.neuralNetwork.blobs['data'].data.shape})
-        self.transformer.set_transpose('data', (2,0,1))
+        self.transformer.set_transpose('data', (2, 0, 1))
         self.transformer.set_raw_scale('data', 255)         # El modelo de referencia opera en imagenes en rango [0,255] en lugar de [0,1]
-        self.transformer.set_channel_swap('data', (2,1,0))  # El modelo de referencia tiene canales BGR en lugar de RGB
+        self.transformer.set_channel_swap('data', (2, 1, 0))  # El modelo de referencia tiene canales BGR en lugar de RGB
         # set net to batch size of 50
         self.neuralNetwork.blobs['data'].reshape(1, 3, 256, 256)
 
@@ -82,10 +82,10 @@ class NeuralNetwork:
         return self.environments
 
 
-    def classifyImage(self, imagePath):
+    def classifyImage(self, imagePath, imageIndex):
         self.neuralNetwork.blobs['data'].data[...] = self.transformer.preprocess('data', caffe.io.load_image(imagePath))
         out = self.neuralNetwork.forward()
         #plt.imshow(transformer.deprocess('data', net.blobs['data'].data[0]))
         # #plt.show()
-        print self.alias , "Clase detectada: " , self.netClasses[out['prob'].argmax()]
+        print self.alias , "Clase detectada: " , str(imageIndex), self.netClasses[out['prob'].argmax()], " - ", self.neuralNetwork.blobs['prob'].data
 
