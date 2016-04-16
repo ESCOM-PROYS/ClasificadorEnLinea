@@ -1,12 +1,15 @@
+# -*- coding: utf-8 -*-
 __author__ = 'isaac'
-#import numpy as np
+import numpy as np
 import pygame
-import os
 import matplotlib.pyplot as plt
 from random import shuffle
 import os
 import sys
-
+home = os.getenv("HOME")
+caffe_root = home + '/caffe/'
+sys.path.insert(0, caffe_root + 'python')
+import caffe
 
 class NeuralNetwork:
 
@@ -14,10 +17,10 @@ class NeuralNetwork:
         self.alias = "[NNET]>> "
         self.netClasses = classesList
         #self.environments = environmentsList
-        self.home = os.getenv("HOME")
-        self.caffe_root = self.home + '/caffe/'
-        sys.path.insert(0, self.caffe_root + 'python')
-        import caffe
+        #self.home = os.getenv("HOME")
+        #self.caffe_root = self.home + '/caffe/'
+        #sys.path.insert(0, self.caffe_root + 'python')
+
         errorFlag = False
         print self.alias , "Buscando un modelo pre entrenado CaffeNet-model..."
         if not os.path.isfile(netModel) or not os.path.isfile(netPrototype):
@@ -36,10 +39,12 @@ class NeuralNetwork:
             print self.alias , "No es posible cargar el archivo que contiene la media de las imagenes"
             errorFlag = True
         else:
+            self.netMean = netMean
             print self.alias , "Media cargada."
         if not errorFlag:
             self.configureNetwork()
-
+        else:
+            print self.alias,  "Ocurrió un error al intentar cargar la red neuronal."
         print self.alias, netModel
         print self.alias, netPrototype
         print self.alias, netMean
@@ -51,7 +56,7 @@ class NeuralNetwork:
         self.neuralNetwork = caffe.Net(self.netPrototype, self.netModel, caffe.TEST)
         print self.alias , 'Red cargada exitosamente.'
         blobm = caffe.proto.caffe_pb2.BlobProto()
-        datam = open( self.netMean, 'rb' ).read()
+        datam = open(self.netMean, 'rb' ).read()
         blobm.ParseFromString(datam)
         mx = np.array(blobm.data)
         print self.alias ,  mx.shape
@@ -65,6 +70,7 @@ class NeuralNetwork:
         self.transformer.set_channel_swap('data', (2,1,0))  # El modelo de referencia tiene canales BGR en lugar de RGB
         # set net to batch size of 50
         self.neuralNetwork.blobs['data'].reshape(1, 3, 256, 256)
+
 
     def getNet(self):
         return self
@@ -82,5 +88,4 @@ class NeuralNetwork:
         #plt.imshow(transformer.deprocess('data', net.blobs['data'].data[0]))
         # #plt.show()
         print self.alias , "Clase detectada: " , self.netClasses[out['prob'].argmax()]
-
 
