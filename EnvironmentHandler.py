@@ -22,7 +22,7 @@ def get_neural_network_by_priority(environment_id, priority):
     """
     Return a neural network according to the priority given
     :param environment_id: environment's name where neural network will be obtained, must be a string
-    :param priority: value between 0 to 100, where 0 is the last neural network, and 100 are the first neural network
+    :param priority: value between 0 to 100, where 0 is the last neural network, and 100 is the first neural network
     :return: a neural network
     """
     ids = resource_handler_environment.get(str(environment_id),

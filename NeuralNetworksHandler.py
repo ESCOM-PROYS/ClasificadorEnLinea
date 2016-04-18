@@ -1,6 +1,7 @@
 __author__ = 'isaac'
 
 import ConfigParser
+from EnvironmentHandler import get_all_neural_networks, get_neural_network_by_priority
 
 class NeuralNetworksHandler:
 
@@ -28,7 +29,12 @@ class NeuralNetworksHandler:
         return self.configFile.get(sectionName, option)
 
     def getNetworkByEnvironmet(self, environment):
+        """
+        :param environment:this parameter must be a integer, which represents environment's identifier
+        :return: a neural network
+        """
         print self.alias , "Searching for Environment : " , environment
+        return get_neural_network_by_priority(str(environment), 100)
         #search for environments through options
         #return networkModel, netMean, prototype , classes
 
