@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 __author__ = 'isaac'
 import numpy as np
-import pygame
-import matplotlib.pyplot as plt
-from random import shuffle
 import os
 import sys
+from pygame import mixer
+from AudioPlayer import *
+
 home = os.getenv("HOME")
 caffe_root = home + '/caffe/'
 sys.path.insert(0, caffe_root + 'python')
@@ -16,6 +16,8 @@ class NeuralNetwork:
     def __init__(self, netModel, netPrototype, netMean , classesList):
         self.alias = "[NNET]>> "
         self.netClasses = classesList
+        self.defaultClass = "desconocido"
+        self.speaker = AudioPlayer()
         #self.environments = environmentsList
         #self.home = os.getenv("HOME")
         #self.caffe_root = self.home + '/caffe/'
@@ -68,7 +70,6 @@ class NeuralNetwork:
         self.transformer.set_transpose('data', (2, 0, 1))
         self.transformer.set_raw_scale('data', 255)         # El modelo de referencia opera en imagenes en rango [0,255] en lugar de [0,1]
         self.transformer.set_channel_swap('data', (2, 1, 0))  # El modelo de referencia tiene canales BGR en lugar de RGB
-        # set net to batch size of 50
         self.neuralNetwork.blobs['data'].reshape(1, 3, 256, 256)
 
 
@@ -81,11 +82,20 @@ class NeuralNetwork:
     def getNetEnvironments(self):
         return self.environments
 
-
     def classifyImage(self, imagePath, imageIndex):
         self.neuralNetwork.blobs['data'].data[...] = self.transformer.preprocess('data', caffe.io.load_image(imagePath))
         out = self.neuralNetwork.forward()
         #plt.imshow(transformer.deprocess('data', net.blobs['data'].data[0]))
-        # #plt.show()
-        print self.alias , "Clase detectada: " , str(imageIndex), self.netClasses[out['prob'].argmax()], " - ", self.neuralNetwork.blobs['prob'].data
+        #plt.show()
+        argmaxArray = out['prob'][out['prob'].argmax()]
+        maxProbabilityIndex = out['prob'][out['prob'].argmax()].argmax()
+        detectedClass = ""
+        #print self.alias, "Clase detectada: ", str(imageIndex), self.netClasses[out['prob'].argmax()], " - ", self.neuralNetwork.blobs['prob'].data , "  >> " , argmaxArray[maxProbabilityIndex]
+        if argmaxArray[maxProbabilityIndex] > 0.65:
+            detectedClass = self.netClasses[out['prob'].argmax()]
+            print self.alias, "Clase detectada: ", str(imageIndex), detectedClass,  " Probabilidad >> ", argmaxArray[maxProbabilityIndex]
+        else:
+            detectedClass = self.defaultClass
+            print self.alias, "Clase ", detectedClass
+        #self.speaker.play(detectedClass)
 
