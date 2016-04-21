@@ -28,6 +28,7 @@ class ImagePreprocesor:
 		self.resetXULCoordinate()
 		self.resetYULCoordinate()
 
+
 	def getNexSegment(self):
 		'''
 		Get the nex segment according with the Upper left corner (xUL, yUL) value and update it's value

@@ -47,12 +47,13 @@ class NeuralNetworksHandler:
             classes = (self.getSectionOption(self.netDescriptorSections[self.currentNet], 'net.classes')).split(',')
             return networkModel, netMean, prototype , classes
         else:
-            return None
+            return None, None, None, None
 
     def getNextNet(self):
-        if self.currentNet < self.availableNets:
+        network = self.getNetworkByIndex(self.currentNet)
+        if self.currentNet < self.availableNets-1:
             self.currentNet += 1
         else:
             self.currentNet = 0
-        return self.getNetworkByIndex(self.currentNet)
+        return network
 

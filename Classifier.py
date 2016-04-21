@@ -48,15 +48,16 @@ class Classifier:
                         print "----------------------------"
                         print self.alias, "CLASSIFYING... "
                         print "----------------------------"
+                        pygame.mixer.music.load("perro.wav")
                         self.takePicture()
+                        #Para pruebas de reproducción --- (En mi compu no furula)
+                        self.play("perro")
+                        self.play("gato")
+                        self.play("desconocido")
+                        # -------------------------------
                         self.startClasification()
                         print self.alias, "UP: ", holdTime
                         holdTime = 0
-                        #Para pruebas de reproducción --- (En mi compu no furula)
-                        self.speaker.play("perro")
-                        self.speaker.play("gato")
-                        self.speaker.play("desconocido")
-                        # -------------------------------
                     else:
                         print self.alias, ": ", holdTime, " miliSegundos"
                         networkModel, netMean, prototype, classes = self.netHandler.getNextNet()
@@ -78,7 +79,6 @@ class Classifier:
 
     def segment_entry_image(self, url_image, url_output):
         img = open(url_image)
-
         horizontalStride = 60
         verticalStride = 100
         topOffset = 125
@@ -87,13 +87,10 @@ class Classifier:
         leftOffset = 125
         widthCut = 250
         heighCut = 250
-
         widthImage, heightImage = img.size
-
         trajectory = SimpleTrajectory(horizontalStride, verticalStride, topOffset, leftOffset, rigthOffset,
                                       bottomOffset,
                                       widthImage, heightImage)
-
         horizontalStride = 0.3
         verticalStride = 70
         radiusMax = 200
@@ -108,9 +105,7 @@ class Classifier:
                                                 centerY,
                                                 widthImage,
                                                 heightImage)
-
         segmenter = RectangularSegmenter(img, heighCut, widthCut, trajectoryCircular)
-
         i = 0
         image = segmenter.get_current_segment()
         image.pil_image.save(url_output+'cutout' + str(i) + '.jpg')
@@ -121,5 +116,17 @@ class Classifier:
             image.pil_image.save(url_output+'cutout' + str(i) + '.jpg')
             #print str(i) + ' -- ' + str(image.x_position_clipper) + ' -- ' + str(image.y_position_clipper)
             i += 1
-
         return i
+
+
+    def play(self, audio):
+        #pygame.init()
+        print self.alias, "Reproduciendo sonido para clase ", audio
+        pygame.mixer.music.load(self.audioPath + audio + self.audioFormat)
+        pygame.mixer.music.play(0)
+        clock = pygame.time.Clock()
+        clock.tick(10)
+        while pygame.mixer.music.get_busy():
+            pygame.event.poll()
+            clock.tick(10)
+
