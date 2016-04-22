@@ -1,39 +1,12 @@
-from Segmenters import RectangularSegmenter
-from Trajectories import SimpleTrajectory, CircularTrajectory
+from ParserHandler import get_circular_trajectory, get_rectangular_segmenter
 from PIL.Image import open
 
 if __name__ == '__main__':
     img = open("img/photo.jpg")
+    width_image, height_image = img.size
 
-    horizontalStride = 60
-    verticalStride = 100
-    topOffset = 125
-    bottomOffset = 125
-    rigthOffset = 125
-    leftOffset = 125
-    widthCut = 250
-    heighCut = 250
-    widthImage, heightImage = img.size
-
-    trajectory = SimpleTrajectory(horizontalStride, verticalStride, topOffset, leftOffset, rigthOffset, bottomOffset,
-                                  widthImage, heightImage)
-
-    horizontalStride = 0.2
-    verticalStride = 100
-    radiusMax = 450
-    radiusMin = 150
-    centerX = widthImage/2
-    centerY = heightImage/2
-    trajectoryCircular = CircularTrajectory(horizontalStride,
-                                            verticalStride,
-                                            radiusMax,
-                                            radiusMin,
-                                            centerX,
-                                            centerY,
-                                            widthImage,
-                                            heightImage)
-
-    segmenter = RectangularSegmenter(img, heighCut, widthCut, trajectoryCircular)
+    trajectory = get_circular_trajectory(width_image, height_image)
+    segmenter = get_rectangular_segmenter(img, trajectory)
 
     i = 0
     image = segmenter.get_current_segment()

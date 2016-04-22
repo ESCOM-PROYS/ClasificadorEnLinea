@@ -24,9 +24,10 @@ class RectangularSegmenter(Segmenter):
     # --------------------------------------------------------------------------
     def __init__(self, PILImage, heightRectangle, widthRectangle, trajectory, lstPreprocessing=[]):
 
+        Segmenter.__init__(self)
         self.image = PILImage
-        self.height = heightRectangle
-        self.width = widthRectangle
+        self.height = int(heightRectangle)
+        self.width = int(widthRectangle)
         self.trajectory = trajectory
         self.lstPreprocessing = lstPreprocessing
 
