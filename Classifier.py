@@ -45,7 +45,7 @@ class Classifier:
                     holdTime = tickTime.tick(60)
                     print self.alias, "DOWN: ", holdTime
                 if event.type == pygame.MOUSEBUTTONUP:
-                        if holdTime < 3000:
+                    if holdTime < 3000:
                         print "----------------------------"
                         print self.alias, "CLASSIFYING... "
                         print "----------------------------"
@@ -110,4 +110,3 @@ class Classifier:
         while pygame.mixer.music.get_busy():
             pygame.event.poll()
             clock.tick(10)
-
