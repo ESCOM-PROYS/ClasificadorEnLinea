@@ -2,22 +2,16 @@
 
 __author__ = 'isaac'
 
-import pygame
-import numpy as np
 import os
+import pygame
 import sys
-from NeuralNetworksHandler import NeuralNetworksHandler
-from NeuralNetwork import  NeuralNetwork
-from ImagePreprocesor import ImagePreprocesor
-from AudioPlayer import AudioPlayer
-import matplotlib.pyplot as plt
-from random import shuffle
-from Trajectories import SimpleTrajectory, CircularTrajectory
-from Segmenters import RectangularSegmenter
-import PIL
 from PIL.Image import open
-from ParserHandler import get_circular_trajectory, get_rectangular_segmenter
 
+from ArchivosViejos.ImagePreprocesor import ImagePreprocesor
+from AudioPlayer import AudioPlayer
+from NeuralNetwork import  NeuralNetwork
+from NeuralNetworksHandler import NeuralNetworksHandler
+from ParserHandler import get_circular_trajectory, get_rectangular_segmenter
 
 
 class Classifier:

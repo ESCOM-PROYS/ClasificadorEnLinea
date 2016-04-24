@@ -103,15 +103,15 @@ from math import sin, cos, pi, acos
 
 
 class CircularTrajectory(Trajectory):
-    def __init__(self, horizontal_stride, vertical_stride, radius_max, radius_min, center_x, center_y, width_image,
-                 height_image):
+    def __init__(self, horizontal_stride, vertical_stride, radius_max, radius_min, width_image,
+                 height_image, center_x = -1, center_y = -1):
 
         Trajectory.__init__(self)
 
-        if center_y is None:
+        if center_y == -1:
             center_y = height_image/2.0
 
-        if center_x is None:
+        if center_x == -1:
             center_x = width_image/2.0
 
         if radius_max <= radius_min:
@@ -120,7 +120,7 @@ class CircularTrajectory(Trajectory):
 
         if not (0 < center_x < width_image):
             raise Exception(
-                'Error centerX: ' + str(center_x) + ' debe de estar entre los valores: (0-' + str(width_image) + ')')
+                'Error centerX: %s debe de estar entre los valores: (0- %s)'%(center_x,width_image))
 
         if not (0 < center_y < height_image):
             raise Exception(

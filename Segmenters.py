@@ -29,7 +29,7 @@ class RectangularSegmenter(Segmenter):
         self.height = int(heightRectangle)
         self.width = int(widthRectangle)
         self.trajectory = trajectory
-        self.lstPreprocessing = lstPreprocessing
+        self.lst_preprocessing = lstPreprocessing
 
     def reset_trajectory(self):
         self.trajectory.reset_position()
@@ -50,7 +50,7 @@ class RectangularSegmenter(Segmenter):
 
         cutout = self.image.crop((upperLeftCorner[0], upperLeftCorner[1], lowerRightCorner[0], lowerRightCorner[1]))
 
-        for processing in self.lstPreprocessing:
+        for processing in self.lst_preprocessing:
             cutout = processing.process(cutout)
 
         return Image(centerCorner[0], centerCorner[1], cutout)
@@ -71,7 +71,7 @@ class RectangularSegmenter(Segmenter):
 
         cutout = self.image.crop((upperLeftCorner[0], upperLeftCorner[1], lowerRightCorner[0], lowerRightCorner[1]))
 
-        for processing in self.lstPreprocessing:
+        for processing in self.lst_preprocessing:
             cutout = processing.process(cutout)
 
         return Image(centerCorner[0], centerCorner[1], cutout)

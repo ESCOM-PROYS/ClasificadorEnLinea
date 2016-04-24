@@ -2,7 +2,6 @@ from PIL.Image import open
 from PIL.Image import Image as PIL_IMG
 from Image import Image
 
-
 #############################################################################################################
 class ImagePreprocesor:
 	'''

@@ -1,6 +1,7 @@
 import ConfigParser
 from Trajectories import CircularTrajectory, SimpleTrajectory
 from Segmenters import RectangularSegmenter
+from Preprocessing import SizePreprocessor
 
 object_parser = None
 environment_parser = None
@@ -35,17 +36,23 @@ def get_circular_trajectory(width_image, height_image):
     vertical_stride = parser.getfloat(section_name_circular_trajectory, prop_name_cir_tra_vertical_stride)
     radius_max = parser.getfloat(section_name_circular_trajectory, prop_name_cir_tra_radius_max)
     radius_min = parser.getfloat(section_name_circular_trajectory, prop_name_cir_tra_radius_min)
-    center_x = parser.getfloat(section_name_circular_trajectory, prop_name_cir_tra_center_x)
-    center_y = parser.getfloat(section_name_circular_trajectory, prop_name_cir_tra_center_y)
+    center_x = parser.get(section_name_circular_trajectory, prop_name_cir_tra_center_x)
+    center_y = parser.get(section_name_circular_trajectory, prop_name_cir_tra_center_y)
+
+    if center_x is None :
+        center_x = -1
+
+    if center_y is None :
+        center_y = -1
 
     circular_trajectory = CircularTrajectory(horizontal_stride,
                                              vertical_stride,
                                              radius_max,
                                              radius_min,
-                                             center_x,
-                                             center_y,
                                              width_image,
-                                             height_image)
+                                             height_image,
+                                             float(center_x),
+                                             float(center_y))
 
     return circular_trajectory
 
@@ -71,13 +78,21 @@ def get_simple_trajectory(width_image, height_image):
     return simple_trajectory
 
 
-def get_rectangular_segmenter(img, trajectory):
+def get_rectangular_segmenter(img, trajectory, lst_preprocessor = None):
     parser = get_segmenter_cfg()
     segmenter = RectangularSegmenter(img,
                                      parser.getint(section_name_rectangular_segmenter, prop_name_rec_seg_height_cut),
                                      parser.getint(section_name_rectangular_segmenter, prop_name_rec_seg_width_cut),
-                                     trajectory)
+                                     trajectory,
+                                     lst_preprocessor)
     return segmenter
+
+
+def get_size_preprocessor():
+    parser = get_segmenter_cfg()
+    preprocessor = SizePreprocessor(parser.getint(section_name_size_preprocessor, prop_name_siz_pre_width),
+                                    parser.getint(section_name_size_preprocessor, prop_name_siz_pre_height))
+    return preprocessor
 
 
 def get_neural_network_cfg():
@@ -92,7 +107,7 @@ def _build_config_parser(url_file_cfg):
     config.read(url_file_cfg)
     return config
 
-
+#Separator for property file
 default_separator = ','
 
 url_file_cfg_environment = 'config/Environment.properties'
@@ -133,6 +148,9 @@ section_name_rectangular_segmenter = 'RECTANGULAR_SEGMENTER'
 prop_name_rec_seg_width_cut = 'rectangular_segmenter_width_cut'
 prop_name_rec_seg_height_cut = 'rectangular_segmenter_height_cut'
 
+section_name_size_preprocessor='SIZE_PREPROCESSOR'
+prop_name_siz_pre_width = 'size_preprocessor_width'
+prop_name_siz_pre_height = 'size_preprocessir_height'
 if __name__ == '__main__':
     a = get_environment_cfg()
     print a.get('1', property_name_environment_cfg_name)
