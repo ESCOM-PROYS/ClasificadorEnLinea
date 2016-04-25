@@ -52,10 +52,10 @@ class SimpleTrajectory(Trajectory):
         if not self.move_next_position:
             return self.current_position
 
-        if self._get_increase_x() >= (self.width_img - self.right_offset):
+        if self._get_increase_x() > (self.width_img - self.right_offset):
             self._reset_x_position()
 
-            if self._get_increase_y() >= (self.height_img - self.bottom_offset):
+            if self._get_increase_y() > (self.height_img - self.bottom_offset):
                 self.move_next_position = False
             else:
                 self._increase_y()
