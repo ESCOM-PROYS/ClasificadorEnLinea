@@ -2,13 +2,13 @@ from ParserHandler import get_circular_trajectory, get_rectangular_segmenter, ge
 from PIL.Image import open
 
 if __name__ == '__main__':
-    img = open("img/prueba3.jpg")
+    img = open("img/prueba1.jpg")
     width_image, height_image = img.size
 
     #trajectory = get_circular_trajectory(width_image, height_image)
     trajectory = get_simple_trajectory(width_image, height_image)
     preprocessor = get_size_preprocessor()
-    segmenter = get_rectangular_segmenter(img, trajectory, [preprocessor])
+    segmenter = get_rectangular_segmenter(img, trajectory, None)
 
     i = 0
     image = segmenter.get_current_segment()

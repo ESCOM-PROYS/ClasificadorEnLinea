@@ -22,14 +22,19 @@ class Segmenter:
 #######################################################################################################################
 class RectangularSegmenter(Segmenter):
     # --------------------------------------------------------------------------
-    def __init__(self, PILImage, heightRectangle, widthRectangle, trajectory, lstPreprocessing=[]):
+    def __init__(self, PILImage, heightRectangle, widthRectangle, trajectory, lst_preprocessing=[]):
 
         Segmenter.__init__(self)
         self.image = PILImage
         self.height = int(heightRectangle)
         self.width = int(widthRectangle)
         self.trajectory = trajectory
-        self.lst_preprocessing = lstPreprocessing
+
+        if lst_preprocessing is None:
+            lst_preprocessing = []
+
+        self.lst_preprocessing = lst_preprocessing
+
 
     def reset_trajectory(self):
         self.trajectory.reset_position()
